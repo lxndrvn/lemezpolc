@@ -4,7 +4,7 @@ db = PostgresqlDatabase('lemezpolc', user='lxndrvn')
 
 
 class BaseModel(Model):
-    """A base model that will use our Postgresql database"""
+
     class Meta:
         database = db
 
