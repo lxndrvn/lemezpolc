@@ -1,17 +1,18 @@
 import os
 import re
 
-pattern = re.compile('(.*)\s-\s(.*)\s*\((\d{4})\)')
+pattern = re.compile('.*\/(.*)\s-\s(.*)\s*\((\d{4})\)')
 
 def collect_releases(path):
     releases = []
     for root, dirs, files in os.walk(path):
-        for name in dirs:
-            details = get_details(name)
-            if not details:
-                print(name)
-                continue
-            releases.append(details)
+        details = get_details(root)
+        cover = get_cover(root, files)
+        if not details:
+            #print(root)
+            continue
+        details['cover'] = cover
+        releases.append(details)
     return releases
 
 
@@ -20,5 +21,26 @@ def get_details(name):
     if not match:
         return None
     artist, title, year = match.groups()
-    details = {'artist': artist.strip(), 'title': title.strip(), 'year': year}
+    details = {'artist': artist.strip(), 'title': title.strip(), 'year': int(year)}
     return details
+
+def get_cover(root, files):
+    cover = None
+    cover_file_names = ('folder.jpg', 'front.jpg')
+    for name in cover_file_names:
+        if name in files:
+            cover = name
+
+    candidates = []
+    for f in files:
+        if f.endswith('.jpg'):
+            candidates.append(f)
+
+    if len(candidates) == 1:
+        cover = candidates[0]
+    if len(candidates) > 1:
+        print(root, f)
+
+    if cover:
+        return '{0}/{1}'.format(root, cover)
+    return None
