@@ -5,13 +5,13 @@ pattern = re.compile('.*\/(.*)\s-\s(.*)\s*\((\d{4})\)')
 
 def collect_releases(path):
     releases = []
+
     for root, dirs, files in os.walk(path):
         details = get_details(root)
-        cover = get_cover(root, files)
         if not details:
-            #print(root)
             continue
-        details['cover'] = cover
+
+        details['cover'] = get_cover(root, files)
         releases.append(details)
     return releases
 
@@ -31,15 +31,16 @@ def get_cover(root, files):
         if name in files:
             cover = name
 
-    candidates = []
-    for f in files:
-        if f.endswith('.jpg'):
-            candidates.append(f)
+    if not cover:
+        candidates = []
+        for f in files:
+            if f.endswith('.jpg'):
+                candidates.append(f)
 
-    if len(candidates) == 1:
-        cover = candidates[0]
-    if len(candidates) > 1:
-        print(root, f)
+        if len(candidates) == 1:
+            cover = candidates[0]
+        if len(candidates) > 1:
+            print(root, candidates)
 
     if cover:
         return '{0}/{1}'.format(root, cover)
