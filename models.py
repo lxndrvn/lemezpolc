@@ -9,9 +9,9 @@ class BaseModel(Model):
         database = db
 
 class Release(BaseModel):
-    artist = CharField(null=False)
-    title = CharField(null=False)
-    year = IntegerField(null=False)
-    cover = BlobField()
-    discogs_link = CharField()
-    path = CharField()
+    artist = CharField()
+    title = CharField()
+    year = IntegerField()
+    cover = BlobField(null=True)
+    discogs_link = CharField(null=True)
+    path = CharField(null=True)
