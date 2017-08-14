@@ -19,8 +19,9 @@ def get_release_data(release):
                                                 'release_title': release_title})
     discogs_link = response.json()['results'][0]['resource_url']
     image_link = response.json()['results'][0]['thumb']
+    directory = release['directory']
     release['discogs_link'] = discogs_link
-    release['image_link'] = image_link
+    release['image'] = download_image(image_link, directory)
     return release
 
 
@@ -29,7 +30,10 @@ def send_request(url, params=None):
     return response
 
 
-def download_image(url, filename):
+def download_image(url, directory):
+    filename = directory + '/folder.jpg'
     response = send_request(url)
-    with open(filename, 'wb') as i:
-        i.write(response.content)
+    image = response.content
+    with open(filename, 'wb+') as image_file:
+        image_file.write(image)
+    return image
