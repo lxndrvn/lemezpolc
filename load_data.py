@@ -2,19 +2,26 @@ from models import Release
 from read_releases import collect_releases
 import os
 
+from scrape_discogs_data import get_release_data
+
 PATH = os.environ.get('LEMEZPOLC_DEFAULT_PATH')
 
 def populate_database():
     releases = collect_releases(PATH)
-    
+
     for release in releases:
-        create_release(release)
-        
+        updated_release = get_release_data(release)
+        create_release(updated_release)
+    
+    print('Releases created')
+
 
 def create_release(release):
     Release.create(artist=release['artist'],
                    title=release['title'],
-                   year=release['year'])
-    print('release created')
+                   year=release['year'],
+                   discogs_link=release['discogs_link'],
+                   cover=release['image'],
+                   directory=release['directory'])
     
 populate_database()
