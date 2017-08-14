@@ -12,6 +12,7 @@ def collect_releases(path):
             continue
 
         details['cover'] = get_cover(root, files)
+        details['directory'] = root
         releases.append(details)
     return releases
 
