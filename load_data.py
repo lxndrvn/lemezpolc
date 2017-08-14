@@ -1,8 +1,11 @@
 from models import Release
 from read_releases import collect_releases
+import os
+
+PATH = os.environ.get('LEMEZPOLC_DEFAULT_PATH')
 
 def populate_database():
-    releases = collect_releases("/Users/lxndrvn/Downloads/Zene")
+    releases = collect_releases(PATH)
     
     for release in releases:
         create_release(release)
