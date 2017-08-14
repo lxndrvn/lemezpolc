@@ -14,4 +14,4 @@ class Release(BaseModel):
     year = IntegerField()
     cover = BlobField(null=True)
     discogs_link = CharField(null=True)
-    path = CharField(null=True)
+    directory = CharField(null=True)
