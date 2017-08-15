@@ -1,6 +1,7 @@
 from models import Release
 from read_releases import collect_releases
 import os
+import time
 
 from scrape_discogs_data import get_release_data
 
@@ -12,7 +13,8 @@ def populate_database():
     for release in releases:
         updated_release = get_release_data(release)
         create_release(updated_release)
-    
+        time.sleep(3)
+
     print('Releases created')
 
 
