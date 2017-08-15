@@ -19,11 +19,13 @@ def populate_database():
 
 
 def create_release(release):
-    Release.create(artist=release['artist'],
-                   title=release['title'],
-                   year=release['year'],
-                   discogs_link=release['discogs_link'],
-                   cover=release['image'],
-                   directory=release['directory'])
-    
+    Release.create(artist=release.get('artist'),
+                   title=release.get('title'),
+                   year=release.get('year'),
+                   discogs_link=release.get('discogs_link'),
+                   cover=release.get('image'),
+                   directory=release.get('directory'),
+                   format=release.get('format'))
+
+
 populate_database()
