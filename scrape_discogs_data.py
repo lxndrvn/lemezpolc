@@ -13,15 +13,11 @@ SEARCH_URL = 'https://api.discogs.com/database/search'
 
 
 def get_release_data(release):
-    artist = release['artist']
-    release_title = release['title']
-    response = send_request(SEARCH_URL, params={'artist': artist,
-                                                'release_title': release_title})
-    discogs_link = response.json()['results'][0]['resource_url']
+    response = send_request(SEARCH_URL, params={'artist': release['artist'],
+                                                'release_title': release['title']})
     image_link = response.json()['results'][0]['thumb']
-    directory = release['directory']
-    release['discogs_link'] = discogs_link
-    release['image'] = download_image(image_link, directory)
+    release['discogs_link'] = response.json()['results'][0]['resource_url']
+    release['image'] = download_image(image_link, release['directory'])
     return release
 
 
