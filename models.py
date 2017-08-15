@@ -15,3 +15,4 @@ class Release(BaseModel):
     cover = BlobField(null=True)
     discogs_link = CharField(null=True)
     directory = CharField(null=True)
+    format = CharField(null=True)
