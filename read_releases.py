@@ -3,6 +3,7 @@ import re
 
 pattern = re.compile('.*\/(.*)\s-\s(.*)\s*\((\d{4})\)')
 
+
 def collect_releases(path):
     releases = []
 
@@ -14,6 +15,7 @@ def collect_releases(path):
         details['cover'] = get_cover(root, files)
         details['directory'] = root
         releases.append(details)
+
     return releases
 
 
@@ -22,8 +24,9 @@ def get_details(name):
     if not match:
         return None
     artist, title, year = match.groups()
-    details = {'artist': artist.strip(), 'title': title.strip(), 'year': int(year)}
+    details = {'artist': artist.strip(), 'title': title.strip(), 'year': year}
     return details
+
 
 def get_cover(root, files):
     cover = None
