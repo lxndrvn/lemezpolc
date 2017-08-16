@@ -12,20 +12,22 @@ def populate_database():
 
     for release in releases:
         if not is_in_database(release):
-            updated_release = get_release_data(release)
-            create_release(updated_release)
-            print('Created release {0} - {1} - {2}'.format(release['artist'], release['title'], release['year']))
+            create_release(release)
             time.sleep(3)
+                
 
 
 def create_release(release):
-    Release.create(artist=release.get('artist'),
-                   title=release.get('title'),
-                   year=release.get('year'),
-                   discogs_link=release.get('discogs_link'),
-                   cover=release.get('image'),
-                   directory=release.get('directory'),
-                   format=release.get('format'))
+    updated_release = get_release_data(release)
+    Release.create(artist=updated_release.get('artist'),
+                   title=updated_release.get('title'),
+                   year=updated_release.get('year'),
+                   discogs_link=updated_release.get('discogs_link'),
+                   cover=updated_release.get('image'),
+                   directory=updated_release.get('directory'),
+                   format=updated_release.get('format'))
+    print('Created release {0} - {1} - {2}'.format(
+        updated_release['artist'], updated_release['title'], updated_release['year']))
 
 def is_in_database(release):
     db_record = Release.select().where(
