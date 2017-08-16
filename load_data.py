@@ -14,6 +14,7 @@ def populate_database():
         if not is_in_database(release):
             updated_release = get_release_data(release)
             create_release(updated_release)
+            print('Created release {0} - {1} - {2}'.format(release['artist'], release['title'], release['year']))
             time.sleep(3)
 
 
