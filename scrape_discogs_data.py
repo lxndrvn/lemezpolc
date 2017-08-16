@@ -31,18 +31,21 @@ def send_request(url, params=None):
 
 
 def get_release_by_search(release):
-    response = send_request(
-        SEARCH_URL,
-        params={'artist': release['artist'], 'release_title': release['title']}
-    )
-    return get_matching_release(response, release['year'])
-    
+    artist = release['artist']
+    title = release['title']
+    year = release['year']
+    response = send_request(SEARCH_URL, params={'artist': artist, 'release_title': title})
+    matching_release = get_matching_release(response, year)
+    if not matching_release:
+        print('Could not find matching release for {0} - {1} - {2}'.format(artist, title, year))
+    return matching_release
     
 def get_matching_release(response, year):
     all_releases = response.json()['results']
     for version in all_releases:
         if version['year'] == year:
             return version
+    return None
 
 def get_release_format(discogs_release_format):
     if 'Album' in discogs_release_format:
