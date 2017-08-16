@@ -33,7 +33,7 @@ def get_release_data(release):
     
     except DiscogsException as e:
         sys.stderr.write(
-            '{0} for {1} - {2} - {3}'.format(e, release['artist'], release['title'], release['year'])
+            '{0} for {1} - {2} - {3}\n'.format(e, release['artist'], release['title'], release['year'])
         )
         raise e
 
