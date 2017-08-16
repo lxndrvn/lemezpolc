@@ -14,7 +14,8 @@ SEARCH_URL = 'https://api.discogs.com/database/search'
 
 def get_release_data(release):
     release_by_search = get_release_by_search(release)
-    release['format'] = get_release_format(release_by_search['format'])
+    
+    release['format'] = get_release_format(release, release_by_search['format'])
     
     release_by_url = get_release_by_api_url(release_by_search['resource_url'])
     release['discogs_link'] = release_by_url['uri']
@@ -47,7 +48,7 @@ def get_matching_release(response, year):
             return version
     return None
 
-def get_release_format(discogs_release_format):
+def get_release_format(release, discogs_release_format):
     if 'Album' in discogs_release_format:
         return 'ALBUM'
     if 'Mini-Album' in discogs_release_format:
@@ -55,7 +56,8 @@ def get_release_format(discogs_release_format):
     if 'EP' in discogs_release_format:
         return 'EP'
     
-    print('Could not find format in {0}'.format(discogs_release_format))
+    print('Could not find format for {0} - {1} - {2}'.format(
+            release['artist'], release['title'], release['year']))
     return None
 
 def get_release_by_api_url(url):
