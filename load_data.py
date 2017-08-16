@@ -11,11 +11,10 @@ def populate_database():
     releases = collect_releases(PATH)
 
     for release in releases:
-        updated_release = get_release_data(release)
-        create_release(updated_release)
-        time.sleep(3)
-
-    print('Releases created')
+        if not is_in_database(release):
+            updated_release = get_release_data(release)
+            create_release(updated_release)
+            time.sleep(3)
 
 
 def create_release(release):
@@ -27,5 +26,11 @@ def create_release(release):
                    directory=release.get('directory'),
                    format=release.get('format'))
 
+def is_in_database(release):
+    db_record = Release.select().where(
+        (Release.artist == release['artist']) &
+        (Release.title == release['title'])
+    )
+    return db_record.exists()
 
 populate_database()
