@@ -2,3 +2,4 @@ data.csv
 lemezpolcenv/
 .idea/
 .env
+__pycache__/
