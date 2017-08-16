@@ -27,7 +27,7 @@ def get_release_data(release):
         release['discogs_link'] = release_by_url['uri']
     
         if not any(file.endswith(".jpg") for file in release['directory']):
-            release['image'] = get_image(release_by_url, release['directory'])
+            release['cover'] = get_image(release_by_url, release['directory'])
     
         return release
     
