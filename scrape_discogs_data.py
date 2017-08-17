@@ -57,15 +57,18 @@ def get_matching_release(response, year):
             return version
     raise DiscogsException('Could not find matching release')
 
-def get_release_format(release, discogs_release_format):
-    if 'Album' in discogs_release_format or 'LP' in discogs_release_format:
+def get_release_format(release, discogs_release_formats):
+    formats = [f.lower() for f in discogs_release_formats]
+    album_types = ['album', 'lp', 'cd', 'cdr' 'mixed', 'cassette']
+
+    if any(s in album_types for s in formats):
         return 'ALBUM'
-    if 'Mini-Album' in discogs_release_format:
+    if 'mini-album' in formats:
         return 'MINI-ALBUM'
-    if 'EP' in discogs_release_format:
+    if 'ep' in formats or 'vinyl' in formats:
         return 'EP'
-    
-    raise DiscogsException('Could not find format ({0})'.format(discogs_release_format))
+
+    raise DiscogsException('Could not find format ({0})'.format(formats))
 
 def get_release_by_api_url(url):
     response = send_request(url)
