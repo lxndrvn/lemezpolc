@@ -16,21 +16,21 @@ SEARCH_URL = 'https://api.discogs.com/database/search'
 
 class DiscogsException(RuntimeError):
     pass
-    
+
 
 def get_release_data(release):
     try:
         release_by_search = get_release_by_search(release)
         release['format'] = get_release_format(release, release_by_search['format'])
-        
+
         release_by_url = get_release_by_api_url(release_by_search['resource_url'])
         release['discogs_link'] = release_by_url['uri']
-    
+
         if not any(file.endswith(".jpg") for file in release['directory']):
             release['cover'] = get_image(release_by_url, release['directory'])
-    
+
         return release
-    
+
     except DiscogsException as e:
         sys.stderr.write(
             '{0} for {1} - {2} - {3}\n'.format(e, release['artist'], release['title'], release['year'])
@@ -48,14 +48,20 @@ def get_release_by_search(release):
     title = release['title']
     year = release['year']
     response = send_request(SEARCH_URL, params={'artist': artist, 'release_title': title})
+
+    if not response.json()['results']:
+        response = send_request(SEARCH_URL, params={'release_title': title, 'year': year})
+
     return get_matching_release(response, year)
-    
+
+
 def get_matching_release(response, year):
     all_releases = response.json()['results']
     for version in all_releases:
         if version['year'] == year:
             return version
     raise DiscogsException('Could not find matching release')
+
 
 def get_release_format(release, discogs_release_formats):
     formats = [f.lower() for f in discogs_release_formats]
@@ -70,6 +76,7 @@ def get_release_format(release, discogs_release_formats):
 
     raise DiscogsException('Could not find format ({0})'.format(formats))
 
+
 def get_release_by_api_url(url):
     response = send_request(url)
     return response.json()
@@ -77,9 +84,9 @@ def get_release_by_api_url(url):
 
 def get_image(release, directory):
     image = get_primary_image(release['images'])
-    return download_image(image['uri'] , directory)
+    return download_image(image['uri'], directory)
 
-    
+
 def get_primary_image(images):
     try:
         for image in images:
@@ -88,6 +95,7 @@ def get_primary_image(images):
         return images[0]
     except:
         raise DiscogsException('Could not find image')
+
 
 def download_image(url, directory):
     try:
