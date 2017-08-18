@@ -65,7 +65,7 @@ def get_matching_release(response, year):
 
 def get_release_format(release, discogs_release_formats):
     formats = [f.lower() for f in discogs_release_formats]
-    album_types = ['album', 'lp', 'cd', 'cdr' 'mixed', 'cassette']
+    album_types = ['album', 'lp', 'cd', 'cdr', 'mixed', 'cassette', 'compilation', 'mixtape']
 
     if any(s in album_types for s in formats):
         return 'ALBUM'
