@@ -38,7 +38,7 @@ def get_cover(root, files):
     if not cover:
         candidates = []
         for f in files:
-            if f.endswith('.jpg'):
+            if f.endswith(('.jpg', '.jpeg', '.png')):
                 candidates.append(f)
 
         if len(candidates) == 1:
