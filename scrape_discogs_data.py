@@ -73,8 +73,7 @@ def get_release_format(release, discogs_release_formats):
         return 'MINI-ALBUM'
     if 'ep' in formats or 'vinyl' in formats:
         return 'EP'
-
-    raise DiscogsException('Could not find format ({0})'.format(formats))
+    return 'UNKNOWN'
 
 
 def get_release_by_api_url(url):
