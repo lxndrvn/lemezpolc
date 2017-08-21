@@ -92,9 +92,12 @@ def is_various_artists(title, match_title):
     return title.startswith('VA') and match_title.startwith('Various')
 
 
+def get_matching_release(results, year):
+    for version in results:
         if version['year'] == year:
             return version
-    raise DiscogsException('Could not find matching release')
+
+    return max(results, key=lambda version: version['year'])
 
 
 def get_release_format(release, discogs_release_formats):
