@@ -1,5 +1,6 @@
 import requests
 import os
+from difflib import SequenceMatcher
 
 import sys
 
@@ -48,16 +49,49 @@ def get_release_by_search(release):
     title = release['title']
     year = release['year']
     response = send_request(SEARCH_URL, params={'artist': artist, 'release_title': title})
+    results = response.json()['results']
 
-    if not response.json()['results']:
+    if results:
+        matching_release = get_matching_release(results, year)
+    else:
         response = send_request(SEARCH_URL, params={'release_title': title, 'year': year})
+        matching_release = get_release_by_title_match(artist, title, response.json()['results'])
 
-    return get_matching_release(response, year)
+    return matching_release
 
 
-def get_matching_release(response, year):
-    all_releases = response.json()['results']
-    for version in all_releases:
+def similarity(a, b):
+    return SequenceMatcher(None, a, b).ratio()
+
+
+def get_release_by_title_match(artist, title, results):
+    # Title at Discogs means artist and release title, like "G.S. Schray - Gabriel"
+
+    full_title = artist + ' - ' + title
+    matches = [
+        (
+            similarity(full_title, result['title']),
+            result,
+        )
+        for result in results
+    ]
+
+    match_ratio, matching_result = max(matches)
+    if match_ratio > 0.9:
+        return matching_result
+    else:
+        if is_various_artists(full_title, matching_result['title']) and match_ratio > 0.7:
+            return matching_result
+
+    print('Found match for {0}: {1}. match ratio: {2}'.format(
+        full_title, matching_result['title'], match_ratio)
+    )
+
+
+def is_various_artists(title, match_title):
+    return title.startswith('VA') and match_title.startwith('Various')
+
+
         if version['year'] == year:
             return version
     raise DiscogsException('Could not find matching release')
