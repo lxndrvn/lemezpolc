@@ -22,7 +22,7 @@ class DiscogsException(RuntimeError):
 def get_release_data(release):
     try:
         release_by_search = get_release_by_search(release)
-        release['format'] = get_release_format(release, release_by_search['format'])
+        release['format'] = get_release_format(release_by_search['format'])
 
         release_by_url = get_release_by_api_url(release_by_search['resource_url'])
         release['discogs_link'] = release_by_url['uri']
@@ -100,7 +100,7 @@ def get_matching_release(results, year):
     return max(results, key=lambda version: version['year'])
 
 
-def get_release_format(release, discogs_release_formats):
+def get_release_format(discogs_release_formats):
     formats = [f.lower() for f in discogs_release_formats]
     album_types = ['album', 'lp', 'cd', 'cdr', 'mixed', 'cassette', 'compilation', 'mixtape']
 
