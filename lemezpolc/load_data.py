@@ -1,4 +1,3 @@
-import os
 import time
 
 from scrape_discogs_data import get_release_data
@@ -6,8 +5,7 @@ from scrape_discogs_data import get_release_data
 from lemezpolc_project.lemezpolc.read_releases import collect_releases
 from peewee_models import Release
 
-PATH = os.environ.get('LEMEZPOLC_DEFAULT_PATH')
-TEST_PATH = os.environ.get('LEMEZPOLC_TEST_PATH')
+from lemezpolc.config import PATH
 
 
 def populate_database():
