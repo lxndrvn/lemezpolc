@@ -47,7 +47,5 @@ def get_cover(root, files):
             print(root, candidates)
 
     if cover:
-        with open('{0}/{1}'.format(root, cover), 'rb') as cover_file:
-            image = cover_file.read()
-        return image
+        return '{0}/{1}'.format(root, cover)
     return None
