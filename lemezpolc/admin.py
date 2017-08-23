@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from lemezpolc.models import Release
+
+admin.site.register(Release)
