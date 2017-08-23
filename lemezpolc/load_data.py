@@ -1,11 +1,11 @@
-from models import Release
-from read_releases import collect_releases
-import os
 import time
 
-from scrape_discogs_data import get_release_data
 
-PATH = os.environ.get('LEMEZPOLC_DEFAULT_PATH')
+from lemezpolc.config import PATH
+from lemezpolc.models import Release
+from lemezpolc.read_releases import collect_releases
+from lemezpolc.scrape_discogs_data import get_release_data
+
 
 def populate_database():
     releases = collect_releases(PATH)
@@ -14,13 +14,11 @@ def populate_database():
         if not is_in_database(release):
             create_release(release)
             time.sleep(3)
-                
-
 
 def create_release(release):
     try:
         updated_release = get_release_data(release)
-        Release.create(artist=updated_release.get('artist'),
+        Release.objects.create(artist=updated_release.get('artist'),
                        title=updated_release.get('title'),
                        year=updated_release.get('year'),
                        discogs_link=updated_release.get('discogs_link'),
@@ -33,10 +31,7 @@ def create_release(release):
         pass
 
 def is_in_database(release):
-    db_record = Release.select().where(
-        (Release.artist == release['artist']) &
-        (Release.title == release['title'])
-    )
+    db_record = Release.objects.filter(arist=release['artist'], title=release['title'])
     return db_record.exists()
 
 populate_database()

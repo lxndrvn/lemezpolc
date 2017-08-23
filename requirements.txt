@@ -2,8 +2,11 @@ certifi==2017.7.27.1
 chardet==3.0.4
 Django==1.11.4
 idna==2.5
+olefile==0.44
 peewee==2.10.1
+Pillow==4.2.1
 psycopg2==2.7.3
+python-resize-image==1.1.11
 pytz==2017.2
 requests==2.18.3
 urllib3==1.22
