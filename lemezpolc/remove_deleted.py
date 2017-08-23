@@ -1,5 +1,5 @@
 import os
-from models import Release
+from peewee_models import Release
 
 def remove_deleted_data():
     for release in Release.select():

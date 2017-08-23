@@ -1,11 +1,14 @@
-from models import Release
-from read_releases import collect_releases
 import os
 import time
 
 from scrape_discogs_data import get_release_data
 
+from lemezpolc_project.lemezpolc.read_releases import collect_releases
+from peewee_models import Release
+
 PATH = os.environ.get('LEMEZPOLC_DEFAULT_PATH')
+TEST_PATH = os.environ.get('LEMEZPOLC_TEST_PATH')
+
 
 def populate_database():
     releases = collect_releases(PATH)
@@ -14,8 +17,6 @@ def populate_database():
         if not is_in_database(release):
             create_release(release)
             time.sleep(3)
-                
-
 
 def create_release(release):
     try:

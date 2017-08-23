@@ -1,4 +1,4 @@
-from models import db, Release
+from peewee_models import db, Release
 
 
 def create_tables():
