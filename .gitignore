@@ -3,3 +3,4 @@ lemezpolcenv/
 .idea/
 .env
 __pycache__/
+lemezpolc/static/covers
