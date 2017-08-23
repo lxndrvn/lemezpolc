@@ -28,7 +28,7 @@ def get_release_data(release):
         release['discogs_link'] = release_by_url['uri']
 
         if not any(file.endswith(".jpg") for file in release['directory']):
-            release['cover'] = get_image(release_by_url, release['directory'])
+            release['cover_path'] = get_image(release_by_url, release['directory'])
 
         return release
 
@@ -140,6 +140,6 @@ def download_image(url, directory):
         image = response.content
         with open(filename, 'wb+') as image_file:
             image_file.write(image)
-        return image
+        return filename
     except:
         raise DiscogsException('Could not download image')
