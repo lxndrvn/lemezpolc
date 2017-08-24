@@ -1,7 +1,7 @@
 import os
 
-from lemezpolc.jobs.load_data import is_in_database
 from lemezpolc.jobs.read_releases import collect_releases
+from lemezpolc.management.commands.save_releases_to_db import is_in_database
 
 PATH = os.environ.get('LEMEZPOLC_DEFAULT_PATH')
 
