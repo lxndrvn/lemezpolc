@@ -32,5 +32,5 @@ class Command(BaseCommand):
             pass
 
     def is_in_database(self, release):
-        db_record = Release.objects.filter(arist=release['artist'], title=release['title'])
+        db_record = Release.objects.filter(artist=release['artist'], title=release['title'])
         return db_record.exists()
