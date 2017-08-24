@@ -4,6 +4,8 @@ from difflib import SequenceMatcher
 
 import sys
 
+from lemezpolc.jobs.resize_image import resize_image
+
 DISCOGS_KEY = os.environ.get('DISCOGS_KEY')
 DISCOGS_SECRET = os.environ.get('DISCOGS_SECRET')
 
@@ -28,7 +30,8 @@ def get_release_data(release):
         release['discogs_link'] = release_by_url['uri']
 
         if not any(file.endswith(".jpg") for file in release['directory']):
-            release['cover_path'] = get_image(release_by_url, release['directory'])
+            image_path = get_image(release_by_url, release['directory'])
+            release['cover_path'] = resize_image(image_path, release['artist'], release['title'])
 
         return release
 
