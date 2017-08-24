@@ -21,4 +21,3 @@ class Command(BaseCommand):
                     db_release.save()
                 except:
                     continue
-
