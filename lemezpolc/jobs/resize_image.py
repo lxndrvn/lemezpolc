@@ -1,26 +1,7 @@
 from PIL import Image
 from resizeimage import resizeimage
-
-from lemezpolc.config import PATH
-from lemezpolc.jobs.read_releases import collect_releases
-from lemezpolc.models import Release
 from lemezpolc_project.settings import STATIC_ROOT
 
-
-def collect_covers():
-    releases = collect_releases(PATH)
-    for release in releases:
-        cover = release['cover']
-        artist = release['artist']
-        title = release['title']
-        if cover:
-            try:
-                db_release = Release.objects.get(artist=artist, title=title)
-                image_path = resize_image(cover, artist, title)
-                db_release.cover_path = image_path
-                db_release.save()
-            except:
-                continue
 
 def resize_image(image_path, artist, title):
     with open(image_path, 'rb') as image_file:
@@ -38,5 +19,3 @@ def generate_image_name(artist, title):
 def snake_case(string):
     return '_'.join(string.lower().split())
 
-
-collect_covers()
