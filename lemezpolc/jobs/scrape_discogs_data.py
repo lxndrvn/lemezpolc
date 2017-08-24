@@ -31,7 +31,7 @@ def get_release_data(release):
 
         if not any(file.endswith(".jpg") for file in release['directory']):
             image_path = get_image(release_by_url, release['directory'])
-            release['cover_path'] = resize_image(image_path, release['artist'], release['title'])
+            release['cover'] = resize_image(image_path, release['artist'], release['title'])
 
         return release
 

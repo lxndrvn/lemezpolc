@@ -10,7 +10,7 @@ def resize_image(image_path, artist, title):
         image_name = generate_image_name(artist, title)
         resized_image_path = '{0}/covers/{1}'.format(STATIC_ROOT, image_name)   
         thumbnail.save(resized_image_path, thumbnail.format)
-    return resized_image_path
+    return image_name
 
 
 def generate_image_name(artist, title):

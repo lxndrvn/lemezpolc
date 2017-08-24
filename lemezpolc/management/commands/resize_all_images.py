@@ -16,8 +16,8 @@ class Command(BaseCommand):
             if cover:
                 try:
                     db_release = Release.objects.get(artist=artist, title=title)
-                    image_path = resize_image(cover, artist, title)
-                    db_release.cover_path = image_path
+                    image = resize_image(cover, artist, title)
+                    db_release.cover = image
                     db_release.save()
                 except:
                     continue

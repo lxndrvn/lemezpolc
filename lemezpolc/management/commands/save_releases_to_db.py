@@ -23,7 +23,7 @@ class Command(BaseCommand):
                                    title=updated_release.get('title'),
                                    year=updated_release.get('year'),
                                    discogs_link=updated_release.get('discogs_link'),
-                                   cover_path=updated_release.get('cover_path'),
+                                   cover=updated_release.get('cover'),
                                    directory=updated_release.get('directory'),
                                    format=updated_release.get('format'))
             print('Created release {0} - {1} - {2}'.format(
