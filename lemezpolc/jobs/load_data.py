@@ -1,10 +1,9 @@
 import time
 
-
 from lemezpolc.config import PATH
+from lemezpolc.jobs.read_releases import collect_releases
+from lemezpolc.jobs.scrape_discogs_data import get_release_data
 from lemezpolc.models import Release
-from lemezpolc.read_releases import collect_releases
-from lemezpolc.scrape_discogs_data import get_release_data
 
 
 def populate_database():

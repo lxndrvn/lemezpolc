@@ -2,9 +2,10 @@ from PIL import Image
 from resizeimage import resizeimage
 
 from lemezpolc.config import PATH
+from lemezpolc.jobs.read_releases import collect_releases
 from lemezpolc.models import Release
-from lemezpolc.read_releases import collect_releases
 from lemezpolc_project.settings import STATIC_ROOT
+
 
 def collect_covers():
     releases = collect_releases(PATH)
