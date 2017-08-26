@@ -11,6 +11,10 @@ body {
 	margin-left: 30px;
 }
 
+#page-title a {
+    color: black;
+}
+
 .release {
 	width: 150px;
 	height: 250px;
@@ -27,4 +31,10 @@ body {
 
 .artist {
 	margin-bottom: 1px;
+}
+
+.endless_container {
+    width: 100%;
+    background-color: pink;
+    text-align: center;
 }
