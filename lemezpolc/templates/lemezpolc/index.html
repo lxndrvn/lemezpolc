@@ -1,0 +1,38 @@
+{% load staticfiles %}
+<html>
+<head>
+
+    <title>COLLECTION</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/lemezpolc.css' %}"
+</head>
+<body>
+        <div class="page-header">
+            <h1 id="page-title">MY COLLECTION</h1>
+        </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
+                {% for release in releases %}
+                <div class="release">
+                    {% with 'covers/'|add:release.cover as image_static %}
+                    <img class="cover" src="{% static image_static  %}">
+                    {% endwith %}
+                    <b><p class="artist">{{ release.artist }}</p></b>
+                    <p>{{ release.title }}</p>
+
+                </div>
+
+
+
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
