@@ -4,7 +4,6 @@ from difflib import SequenceMatcher
 
 import sys
 
-from lemezpolc.jobs.resize_image import resize_image
 
 DISCOGS_KEY = os.environ.get('DISCOGS_KEY')
 DISCOGS_SECRET = os.environ.get('DISCOGS_SECRET')
@@ -21,90 +20,90 @@ class DiscogsException(RuntimeError):
     pass
 
 
-def get_release_data(release):
+def extend_release(release):
     try:
         release_by_search = get_release_by_search(release)
-        release['format'] = get_release_format(release_by_search['format'])
+        if not release_by_search:
+            return release
+
+        release.format = get_release_format(release_by_search['format'])
 
         release_by_url = get_release_by_api_url(release_by_search['resource_url'])
-        release['discogs_link'] = release_by_url['uri']
+        release.discogs_link = release_by_url['uri']
 
-        if not release['cover']:
-            image_path = get_image(release_by_url, release['directory'])
-            release['cover'] = resize_image(image_path, release['artist'], release['title'])
+        if not release.cover:
+            release.cover = get_image(release, release_by_url, release.directory)
 
         return release
 
     except DiscogsException as e:
         sys.stderr.write(
-            '{0} for {1} - {2} - {3}\n'.format(e, release['artist'], release['title'], release['year'])
+            '{0} for {1} - {2} - {3}\n'.format(e, release.artist, release.title, release.year)
         )
+        return release
+
 
 def get_results(url, params=None):
     response = send_request(url, params)
     return response.json()['results']
 
+
 def send_request(url, params=None):
     response = requests.get(url, headers=HEADERS, params=params)
+    if not response.ok:
+        print(response.text)
     return response
 
 
 def get_release_by_search(release):
-    artist = release['artist']
-    title = release['title']
-    year = release['year']
+    results = get_results(SEARCH_URL, params={'artist': release.artist, 'release_title': release.title})
+    if not results:
+        return get_release_by_title_match(release)
+    return get_matching_release(results, release.year)
 
-    results = get_results(SEARCH_URL, params={'artist': artist, 'release_title': title})
 
-    if results:
-        matching_release = get_matching_release(results, year)
-    else:
-        results = get_results(SEARCH_URL, params={'release_title': title, 'year': year})
-        if not results:
-            raise DiscogsException('Could not find matching releases by search')
-        matching_release = get_release_by_title_match(artist, title, results)
+def get_matching_release(results, year):
+    for version in results:
+        if version.get('year') == year:
+            return version
 
-    return matching_release
+    results_with_year = [result for result in results if result.get('year')]
+    if not results_with_year:
+        return None
+
+    return max(results_with_year, key=lambda version: version['year'])
 
 
 def similarity(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
 
-def get_release_by_title_match(artist, title, results):
+def get_release_by_title_match(release):
     # Title at Discogs means artist and release title, like "G.S. Schray - Gabriel"
 
-    full_title = artist + ' - ' + title
-    matches = [
-        (
-            similarity(full_title, result['title']),
-            result,
-        )
-        for result in results
-    ]
+    results = get_results(SEARCH_URL, params={'release_title': release.title, 'year': release.year})
+    if not results:
+        print('No Discogs match found for {0} - {1} - {2}'.format(release.artist, release.title, release.year))
+        return None
 
-    match_ratio, matching_result = max(matches)
+    full_title = '{0} - {1}'.format(release.artist, release.title)
+    matches = [(similarity(full_title, result['title']), result) for result in results]
+    return get_best_match(full_title, matches)
+
+
+def get_best_match(full_title, matches):
+    match_ratio, matching_result = max(matches, key=lambda match: match[0])
     if match_ratio > 0.9:
         return matching_result
     else:
         if is_various_artists(full_title, matching_result['title']) and match_ratio > 0.7:
             return matching_result
-
-    print('Found match for {0}: {1}. match ratio: {2}'.format(
-        full_title, matching_result['title'], match_ratio)
-    )
+    raise DiscogsException('Could not find good match for {0}. Best match: {1}, {2}'.format(
+                            full_title, matching_result['title'], match_ratio))
 
 
 def is_various_artists(title, match_title):
-    return title.startswith('VA') and match_title.startwith('Various')
-
-
-def get_matching_release(results, year):
-    for version in results:
-        if version['year'] == year:
-            return version
-
-    return max(results, key=lambda version: version['year'])
+    return title.startswith('VA') and match_title.startswith('Various')
 
 
 def get_release_format(discogs_release_formats):
@@ -125,19 +124,21 @@ def get_release_by_api_url(url):
     return response.json()
 
 
-def get_image(release, directory):
-    image = get_primary_image(release['images'])
+def get_image(release, discogs_result, directory):
+    images = discogs_result.get('images')
+    if not images:
+        print('Could not find image for {0} - {1}'.format(release.artist, release.title))
+        return None
+
+    image = get_primary_image(discogs_result['images'])
     return download_image(image['uri'], directory)
 
 
 def get_primary_image(images):
-    try:
-        for image in images:
-            if image['type'] == 'primary':
-                return image
-        return images[0]
-    except:
-        raise DiscogsException('Could not find image')
+    for image in images:
+        if image['type'] == 'primary':
+            return image
+    return images[0]
 
 
 def download_image(url, directory):

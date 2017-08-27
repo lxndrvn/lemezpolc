@@ -53,7 +53,7 @@ def get_cover_from_images(root, files):
     possible_covers = [f for f in files if f.endswith(('.jpg', '.jpeg', '.png'))]
 
     if len(possible_covers) == 1:
-        return possible_covers[0]
+        return '{0}/{1}'.format(root, possible_covers[0])
 
     if len(possible_covers) > 1:
         print('Multiple covers found for {0}: {1}'.format(root, possible_covers))

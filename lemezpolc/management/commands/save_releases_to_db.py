@@ -4,7 +4,8 @@ from django.core.management import BaseCommand
 
 from lemezpolc.config import DEFAULT_PATH
 from lemezpolc.jobs.read_releases import collect_releases
-from lemezpolc.jobs.scrape_discogs_data import get_release_data
+from lemezpolc.jobs.resize_image import resize_image
+from lemezpolc.jobs.scrape_discogs_data import extend_release
 from lemezpolc.models import Release
 
 
@@ -17,10 +18,16 @@ class Command(BaseCommand):
                 time.sleep(3)
 
     def create_release(self, release):
-        release = get_release_data(release)
+        release = extend_release(release)
+
+        if not release.cover:
+            print('No cover found for {0} - {1}'.format(release.artist, release.title))
+            return
+
+        release.cover = resize_image(release.cover, release.artist, release.title)
         Release.objects.create(artist=release.artist,
                                title=release.title,
-                               year=release.year,
+                               year=int(release.year),
                                discogs_link=release.discogs_link,
                                cover=release.cover,
                                directory=release.directory,
