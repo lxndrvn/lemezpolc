@@ -19,13 +19,14 @@ def collect_releases(path):
     releases = []
 
     for root, dirs, files in os.walk(path):
-        details = get_details(root)
-        if not details:
+        release = get_details(root)
+        if not release:
+            print('No regex match for {0}'.format(root))
             continue
 
-        details['cover'] = get_cover(root, files)
-        details['directory'] = root
-        releases.append(details)
+        release.cover = get_cover_by_filename(root, files)
+        release.directory = root
+        releases.append(release)
 
     return releases
 
@@ -39,24 +40,22 @@ def get_details(name):
     return release
 
 
-def get_cover(root, files):
-    cover = None
+def get_cover_by_filename(root, files):
     cover_file_names = ('folder.jpg', 'front.jpg')
     for name in cover_file_names:
         if name in files:
-            cover = name
+            return '{0}/{1}'.format(root, name)
 
-    if not cover:
-        candidates = []
-        for f in files:
-            if f.endswith(('.jpg', '.jpeg', '.png')):
-                candidates.append(f)
+    return get_cover_from_images(root, files)
 
-        if len(candidates) == 1:
-            cover = candidates[0]
-        if len(candidates) > 1:
-            print(root, candidates)
 
-    if cover:
-        return '{0}/{1}'.format(root, cover)
+def get_cover_from_images(root, files):
+    possible_covers = [f for f in files if f.endswith(('.jpg', '.jpeg', '.png'))]
+
+    if len(possible_covers) == 1:
+        return possible_covers[0]
+
+    if len(possible_covers) > 1:
+        print('Multiple covers found for {0}: {1}'.format(root, possible_covers))
+
     return None
