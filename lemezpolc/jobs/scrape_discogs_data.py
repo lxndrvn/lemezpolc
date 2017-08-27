@@ -29,7 +29,7 @@ def get_release_data(release):
         release_by_url = get_release_by_api_url(release_by_search['resource_url'])
         release['discogs_link'] = release_by_url['uri']
 
-        if not any(file.endswith(".jpg") for file in release['directory']):
+        if not release['cover']:
             image_path = get_image(release_by_url, release['directory'])
             release['cover'] = resize_image(image_path, release['artist'], release['title'])
 
