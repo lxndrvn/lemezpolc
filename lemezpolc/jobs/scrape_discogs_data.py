@@ -39,7 +39,6 @@ def get_release_data(release):
         sys.stderr.write(
             '{0} for {1} - {2} - {3}\n'.format(e, release['artist'], release['title'], release['year'])
         )
-        raise e
 
 
 def send_request(url, params=None):
