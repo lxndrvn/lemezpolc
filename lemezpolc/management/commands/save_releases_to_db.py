@@ -17,17 +17,17 @@ class Command(BaseCommand):
                 time.sleep(3)
 
     def create_release(self, release):
-        updated_release = get_release_data(release)
-        Release.objects.create(artist=updated_release.get('artist'),
-                               title=updated_release.get('title'),
-                               year=updated_release.get('year'),
-                               discogs_link=updated_release.get('discogs_link'),
-                               cover=updated_release.get('cover'),
-                               directory=updated_release.get('directory'),
-                               format=updated_release.get('format'))
+        release = get_release_data(release)
+        Release.objects.create(artist=release.artist,
+                               title=release.title,
+                               year=release.year,
+                               discogs_link=release.discogs_link,
+                               cover=release.cover,
+                               directory=release.directory,
+                               format=release.format)
         print('Created release {0} - {1} - {2}'.format(
-            updated_release['artist'], updated_release['title'], updated_release['year']))
+            release.artist, release.title, release.year))
 
     def is_in_database(self, release):
-        db_record = Release.objects.filter(artist=release['artist'], title=release['title'])
+        db_record = Release.objects.filter(artist=release.artist, title=release.title)
         return db_record.exists()
