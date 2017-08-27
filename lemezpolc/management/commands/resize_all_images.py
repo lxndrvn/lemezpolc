@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 
-from lemezpolc.config import PATH
+from lemezpolc.config import DEFAULT_PATH
 from lemezpolc.jobs.read_releases import collect_releases
 from lemezpolc.jobs.resize_image import resize_image
 from lemezpolc.models import Release
@@ -8,7 +8,7 @@ from lemezpolc.models import Release
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        releases = collect_releases(PATH)
+        releases = collect_releases(DEFAULT_PATH)
         for release in releases:
             cover = release['cover']
             artist = release['artist']

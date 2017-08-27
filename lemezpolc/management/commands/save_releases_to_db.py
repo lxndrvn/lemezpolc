@@ -2,7 +2,7 @@ import time
 
 from django.core.management import BaseCommand
 
-from lemezpolc.config import PATH
+from lemezpolc.config import DEFAULT_PATH
 from lemezpolc.jobs.read_releases import collect_releases
 from lemezpolc.jobs.scrape_discogs_data import get_release_data
 from lemezpolc.models import Release
@@ -10,7 +10,7 @@ from lemezpolc.models import Release
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        releases = collect_releases(PATH)
+        releases = collect_releases(DEFAULT_PATH)
         for release in releases:
             if not self.is_in_database(release):
                 self.create_release(release)
