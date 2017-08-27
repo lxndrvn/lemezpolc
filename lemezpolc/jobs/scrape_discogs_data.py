@@ -40,6 +40,9 @@ def get_release_data(release):
             '{0} for {1} - {2} - {3}\n'.format(e, release['artist'], release['title'], release['year'])
         )
 
+def get_results(url, params=None):
+    response = send_request(url, params)
+    return response.json()['results']
 
 def send_request(url, params=None):
     response = requests.get(url, headers=HEADERS, params=params)
@@ -50,14 +53,13 @@ def get_release_by_search(release):
     artist = release['artist']
     title = release['title']
     year = release['year']
-    response = send_request(SEARCH_URL, params={'artist': artist, 'release_title': title})
-    results = response.json()['results']
+
+    results = get_results(SEARCH_URL, params={'artist': artist, 'release_title': title})
 
     if results:
         matching_release = get_matching_release(results, year)
     else:
-        response = send_request(SEARCH_URL, params={'release_title': title, 'year': year})
-        results = response.json()['results']
+        results = get_results(SEARCH_URL, params={'release_title': title, 'year': year})
         if not results:
             raise DiscogsException('Could not find matching releases by search')
         matching_release = get_release_by_title_match(artist, title, results)
