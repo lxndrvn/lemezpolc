@@ -58,7 +58,10 @@ def get_release_by_search(release):
         matching_release = get_matching_release(results, year)
     else:
         response = send_request(SEARCH_URL, params={'release_title': title, 'year': year})
-        matching_release = get_release_by_title_match(artist, title, response.json()['results'])
+        results = response.json()['results']
+        if not results:
+            raise DiscogsException('Could not find matching releases by search')
+        matching_release = get_release_by_title_match(artist, title, results)
 
     return matching_release
 
