@@ -10,9 +10,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         releases = collect_releases(DEFAULT_PATH)
         for release in releases:
-            cover = release['cover']
-            artist = release['artist']
-            title = release['title']
+            cover = release.cover
+            artist = release.artist
+            title = release.title
             if cover:
                 try:
                     db_release = Release.objects.get(artist=artist, title=title)
