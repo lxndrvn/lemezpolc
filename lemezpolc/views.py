@@ -1,11 +1,10 @@
 from django.shortcuts import render
 from django.db.models.functions import Lower
 
+from lemezpolc.filters import ReleaseFilter
 from lemezpolc.models import Release
 
 
-def index(request):
-    releases = Release.objects.order_by(Lower('artist'))
-    return render(request, 'lemezpolc/index.html', {'releases': releases})
-
-    return render(request, 'lemezpolc/index.html', {'releases': releases})
+def release_list(request):
+    filter = ReleaseFilter(request.GET, queryset=Release.objects.order_by(Lower('artist')))
+    return render(request, 'lemezpolc/index.html', {'filter': filter})

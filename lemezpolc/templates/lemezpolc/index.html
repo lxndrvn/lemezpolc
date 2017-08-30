@@ -7,7 +7,7 @@
     <title>COLLECTION</title>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'css/lemezpolc.css' %}"
+    <link rel="stylesheet" href="{% static 'css/lemezpolc.css' %}">
 </head>
 <body>
 <div class="page-header">
@@ -15,9 +15,22 @@
 </div>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
-            {% lazy_paginate releases %}
-            {% for release in releases %}
+        <div class="col-md-2">
+            <form action="" method="get">
+                <div class="form-group">
+                    {{ filter.form.year }}
+                    {{ filter.form.artist }}
+                    {{ filter.form.title }}
+                </div>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+            <a href="/?format=ALBUM">ALBUM</a>
+            <a href="/?format=EP">EP</a>
+            <a href="/?format=UNKNOWN">UNKNOWN</a>
+        </div>
+        <div class="col-md-10">
+            {% lazy_paginate filter.qs as objects %}
+            {% for release in objects %}
             <div class="release">
                 {% with 'covers/'|add:release.cover as image_static %}
                 <img class="cover" src="{% static image_static  %}">
@@ -29,7 +42,6 @@
         </div>
         {% show_more %}
     </div>
-</div>
 </div>
 </body>
 </html>
