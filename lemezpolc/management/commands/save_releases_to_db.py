@@ -32,7 +32,7 @@ class Command(BaseCommand):
                                discogs_link=release.discogs_link,
                                cover=release.cover,
                                directory=release.directory,
-                               format=release.format)
+                               release_format=release.release_format)
         print('Created release {0} - {1} - {2}'.format(
             release.artist, release.title, release.year))
 

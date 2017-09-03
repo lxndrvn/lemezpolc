@@ -9,4 +9,4 @@ class ReleaseFilter(django_filters.FilterSet):
 
     class Meta:
         model = Release
-        fields = ['year', 'format']
+        fields = ['year', 'release_format']

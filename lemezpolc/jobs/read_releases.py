@@ -12,7 +12,7 @@ class Release(object):
         self.cover = None
         self.discogs_link = None
         self.directory = None
-        self.format = None
+        self.release_format = None
 
 
 def collect_releases(path):

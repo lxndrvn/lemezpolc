@@ -26,7 +26,7 @@ def extend_release(release):
         if not release_by_search:
             return release
 
-        release.format = get_release_format(release_by_search['format'])
+        release.release_format = get_release_format(release_by_search['format'])
 
         release_by_url = get_release_by_api_url(release_by_search['resource_url'])
         release.discogs_link = release_by_url['uri']
