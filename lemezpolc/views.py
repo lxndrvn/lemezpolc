@@ -6,5 +6,5 @@ from lemezpolc.models import Release
 
 
 def release_list(request):
-    filter = ReleaseFilter(request.GET, queryset=Release.objects.order_by(Lower('artist')))
-    return render(request, 'lemezpolc/index.html', {'filter': filter})
+    release_filter = ReleaseFilter(request.GET, queryset=Release.objects.order_by(Lower('artist')))
+    return render(request, 'lemezpolc/index.html', {'filter': release_filter})
