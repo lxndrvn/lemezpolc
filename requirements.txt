@@ -15,4 +15,4 @@ pyflakes==1.5.0
 python-resize-image==1.1.11
 pytz==2017.2
 requests==2.18.3
-urllib3==1.22
+urllib3==1.26.5
